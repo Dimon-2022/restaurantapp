@@ -13,7 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('management.category');
+        $categories = Category::paginate(5);
+        return view('management.category', ['categories' => $categories]);
     }
 
     /**
@@ -52,24 +53,35 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category)
     {
-        //
+        $category = Category::find($category->id);
+        return view('management.editCategory', ['category' => $category]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $request->validate(
+            ['name' => 'required|unique:categories|max:255']
+        );
+        $category = Category::find($category->id);
+
+        $category->name = $request->name;
+        $category->save();
+        $request->session()->flash('status', $request->name . ' is update successfully.');
+        return redirect()->route('category.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        Category::destroy($category->id);
+        Session()->flash('status', 'Category is deleted successfully.');
+        return redirect()->route('category.index');
     }
 }
