@@ -4,7 +4,7 @@
             @include('management.inc.sidebar')
             <div class="col-md-8">
                 <i class="fas fa-hamburger"></i>Menu
-                <a class="btn btn-success btn-sm float-end" href="#"> <i class="fas fa-plus"></i>Create Menu</a>
+                <a class="btn btn-success btn-sm float-end" href="{{ route('menu.create')  }}"> <i class="fas fa-plus"></i>Create Menu</a>
                 <hr>
                 @if (Session()->has('status'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
