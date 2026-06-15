@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Management;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -13,7 +14,8 @@ class MenuController extends Controller
      */
     public function index()
     {
-        return view('management.menu');
+        $menus = Menu::all();
+        return view('management.menu', ['menus' => $menus]);
     }
 
     /**
@@ -30,7 +32,29 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:menus|max:255',
+            'price' => 'required|numeric',
+            'category_id' => 'required|numeric',
+        ]);
+
+        $imageName = "noimage.png";
+        if ($request->image) {
+            $request->validate([
+                'image' => 'nullable|file|image|mimes:jpeg,png,jpg|max:5000'
+            ]);
+            $imageName = date('mdYHis').uniqid(). '.' . $request->image->extension();
+            $request->image->move(public_path('menu_images'), $imageName);
+        }
+        $menu = new Menu();
+        $menu->name = $request->name;
+        $menu->price = $request->price;
+        $menu->image = $imageName;
+        $menu->description = $request->description;
+        $menu->category_id = $request->category_id;
+        $menu->save();
+        $request->session()->flash('status', $request->name . ' is saved successfully.');
+        return redirect()->route('menu.index');
     }
 
     /**
