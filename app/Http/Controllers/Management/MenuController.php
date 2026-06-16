@@ -70,7 +70,16 @@ class MenuController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $menu = Menu::find($id);
+        $categories = Category::all();
+
+        return view(
+            'management.editMenu',
+            [
+                'menu' => $menu,
+                'categories' => $categories,
+            ]
+        );
     }
 
     /**

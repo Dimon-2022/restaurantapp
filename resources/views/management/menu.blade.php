@@ -37,7 +37,9 @@
                                 </td>
                                 <td>{{$menu->description}}</td>
                                 <td>{{$menu->category->name}}</td>
-                                <td>1</td>
+                                <td>
+                                    <a class="btn btn-warning" href="{{route('menu.edit',['menu'=>$menu->id])}}">Edit</a>
+                                </td>
                                 <td>1</td>
                             </tr>
                         @endforeach
