@@ -40,7 +40,13 @@
                                 <td>
                                     <a class="btn btn-warning" href="{{route('menu.edit',['menu'=>$menu->id])}}">Edit</a>
                                 </td>
-                                <td>1</td>
+                                <td>
+                                    <form action="{{route('menu.destroy', ['menu'=>$menu->id])}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="submit" class="btn btn-danger" value="Delete">
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
