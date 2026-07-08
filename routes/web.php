@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Cashier\CashierController;
 use App\Http\Controllers\Management\CategoryController;
 use App\Http\Controllers\Management\MenuController;
 use App\Http\Controllers\ProfileController;
@@ -30,5 +31,11 @@ Route::resource('management/category', CategoryController::class);
 Route::resource('management/menu', MenuController::class);
 
 Route::resource('management/table', TableController::class);
+
+Route::get('/cashier', function () {
+    return view('cashier.index');
+});
+
+Route::get('/cashier/getTable', [CashierController::class, 'getTables']);
 
 require __DIR__.'/auth.php';
