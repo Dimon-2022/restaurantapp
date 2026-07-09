@@ -16,10 +16,19 @@
     <script>
         window.addEventListener('load', function () {
             $(function () {
+                $("#table-detail").hide();
                 $("#btn-show-tables").click(function () {
-                    $.get('/cashier/getTable', function (data){
-                        $("#table-detail").html(data);
-                    })
+                    if($("#table-detail").is(":hidden")) {
+                        $.get('/cashier/getTable', function (data){
+                            $("#table-detail").html(data);
+                            $("#table-detail").slideDown('fast');
+                            $("#btn-show-tables").html("Hide Tables").removeClass("btn-primary").addClass("btn-danger");
+                        })
+                    }
+                    else{
+                        $("#table-detail").slideUp('fast');
+                        $("#btn-show-tables").html("View All Tables").removeClass("btn-danger").addClass("btn-primary");
+                    }
                 })
             });
         });
