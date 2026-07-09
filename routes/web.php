@@ -9,7 +9,7 @@ use App\Http\Controllers\Management\TableController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::get('/dashboard', function () {
@@ -32,10 +32,10 @@ Route::resource('management/menu', MenuController::class);
 
 Route::resource('management/table', TableController::class);
 
-Route::get('/cashier', function () {
-    return view('cashier.index');
-});
+Route::get('/cashier', [CashierController::class, 'index'])->name('cashier.index');
 
 Route::get('/cashier/getTable', [CashierController::class, 'getTables']);
+
+Route::get('/cashier/getMenuByCategory/{category_id}', [CashierController::class, 'getMenuByCategory'])->name('cashier.getMenuByCategory');
 
 require __DIR__.'/auth.php';
