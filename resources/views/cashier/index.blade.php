@@ -9,6 +9,8 @@
         <div class="row justify-content-center">
             <div class="col-md-5">
                 <button class="btn btn-primary btn-block" id="btn-show-tables">View All Table</button>
+                <div id="selected-table"></div>
+                <div id="order-detail"></div>
             </div>
             <div class="col-md-7">
                 <nav>
@@ -50,6 +52,37 @@
                     $("#list-menu").html(data);
                     $("#list-menu").fadeIn('fast');
                 })
+            })
+
+            var selectedTableId = "";
+            var selectedTableName = "";
+
+            $("#table-detail").on('click', ".btn-table", function () {
+                selectedTableId = $(this).data('id');
+                selectedTableName = $(this).data('name');
+                $("#selected-table").html("<br><h3>Selected Table: " + selectedTableName + "</h3><hr>");
+            })
+
+            $("#list-menu").on('click', ".btn-menu", function () {
+                if(selectedTableId == "") {
+                    alert("Please select a table first");
+                }else{
+                    var menuId = $(this).data('id');
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            "_token": $('meta[name="csrf-token"]').attr('content'),
+                            "table_id": selectedTableId,
+                            "menu_id": menuId,
+                            "table_name": selectedTableName,
+                            "quantity": 1,
+                        },
+                        url: "/cashier/orderFood/",
+                        success: function (data) {
+                            $("#order-detail").html(data);
+                        }
+                    })
+                }
             })
         });
     </script>
