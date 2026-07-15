@@ -117,6 +117,13 @@ class CashierController extends Controller
         return $html;
     }
 
+    public function confirmOrderStatus(Request $request){
+        $sale_id = $request->sale_id;
+        $saleDetails = SaleDetail::where('sale_id', $sale_id)->update(['status' => 'confirmed']);
+        $html = $this->getSaleDetails($sale_id);
+        return $html;
+    }
+
     private function getSaleDetails($sale_id){
         $html = '<p>Sale ID: ' . $sale->id . '</p>';
         $saleDetails = SaleDetail::where('sale_id', $sale_id)->get();
@@ -134,6 +141,8 @@ class CashierController extends Controller
 </thead>
 <tbody>';
 
+        $showBtnPayment = true;
+
         foreach ($saleDetails as $saleDetail) {
             $html .='
                 <tr>
@@ -141,9 +150,19 @@ class CashierController extends Controller
                 <td>'.$saleDetail->menu_name.'</td>
                 <td>'.$saleDetail->quantity.'</td>
                 <td>'.$saleDetail->menu_price.'</td>
-                <td>'.($saleDetail->menu_price * $saleDetail->quantity).'</td>
-                <td>'.$saleDetail->status.'</td>
-</tr>
+                <td>'.($saleDetail->menu_price * $saleDetail->quantity).'</td>';
+
+            if($saleDetail->status === 'noConfirm'){
+                $showBtnPayment = false;
+                $html .= '<td><a data-id="' . $saleDetail->id . '" class="btn btn-danger btn-delete-saledetail">
+<i class="far fa-trash-alt"></i>
+</a></td>';
+            } else{
+                $html .= '<i class="fas fa-check-circle"></i>';
+            }
+
+                $html .= '<td>'.$saleDetail->status.'</td>';
+$html .= '</tr>
             ';
         }
 
@@ -152,6 +171,14 @@ class CashierController extends Controller
         $sale = Sale::find($sale_id);
         $html .= '<hr>';
         $html .= '<h3>Total Amount: $' . number_format($sale->total_price) . '</h3>';
+
+        if($showBtnPayment){
+            $html .= '<button data-id="' . $sale->id . '" class="btn btn-success btn-block btn-payment">Payment</button>';
+        } else{
+            $html .= '<button data-id="' . $sale->id . '" class="btn btn-warning btn-block btn-confirm-order">Confirm Order</button>';
+        }
+
+
 
         return $html;
     }
