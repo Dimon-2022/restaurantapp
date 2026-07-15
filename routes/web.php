@@ -36,9 +36,12 @@ Route::get('/cashier', [CashierController::class, 'index'])->name('cashier.index
 
 Route::get('/cashier/getTable', [CashierController::class, 'getTables']);
 
+Route::get("/cashier/getSaleDetailsByTable/{table_id}", [CashierController::class, 'getSaleDetailsByTable'])->name('cashier.getSaleDetailsByTable');
+
 Route::post('/cashier/orderFood', [CashierController::class, 'orderFood'])->name('cashier.orderFood');
 
 Route::get('/cashier/getMenuByCategory/{category_id}', [CashierController::class, 'getMenuByCategory'])->name('cashier.getMenuByCategory');
+
 
 
 require __DIR__.'/auth.php';

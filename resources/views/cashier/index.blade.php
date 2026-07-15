@@ -61,6 +61,9 @@
                 selectedTableId = $(this).data('id');
                 selectedTableName = $(this).data('name');
                 $("#selected-table").html("<br><h3>Selected Table: " + selectedTableName + "</h3><hr>");
+                $.get("/cashier/getSaleDetailsByTable/"+selectedTableId, function (data){
+                    $("#order-detail").html(data);
+                });
             })
 
             $("#list-menu").on('click', ".btn-menu", function () {

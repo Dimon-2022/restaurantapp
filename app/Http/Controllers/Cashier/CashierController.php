@@ -29,7 +29,13 @@ class CashierController extends Controller
             $html .= '<button class="btn btn-primary btn-table" data-id="' . $table->id . '" data-name="' . $table->name . '">';
             $html .= '<img class="img-fluid" src="' . url('/images/table.svg') . '"/>';
             $html .= '<br>';
-            $html .= '<span class="badge badge-success">' . $table->name . '</span>';
+
+            if($table->status === 'available'){
+                $html .= '<span class="badge badge-success">' . $table->name . '</span>';
+            }else{
+                $html .= '<span class="badge badge-danger">' . $table->name . '</span>';
+            }
+
             $html .= '</button>';
             $html .= '</div>';
         }
@@ -98,6 +104,19 @@ class CashierController extends Controller
         return $html;
     }
 
+    public function getSaleDetailsByTable($table_id){
+        $sale = Sale::where('table_id', $table_id)->where('sale_status', 'unpaid')->first();
+        $html = '';
+
+        if($sale){
+            $sale_id = $sale->id;
+            $html .= $this->getSaleDetails($sale_id);
+        }else{
+            $html .= 'No sale found';
+        }
+        return $html;
+    }
+
     private function getSaleDetails($sale_id){
         $html = '<p>Sale ID: ' . $sale->id . '</p>';
         $saleDetails = SaleDetail::where('sale_id', $sale_id)->get();
@@ -129,6 +148,11 @@ class CashierController extends Controller
         }
 
         $html .='</tbody></table></div>';
+
+        $sale = Sale::find($sale_id);
+        $html .= '<hr>';
+        $html .= '<h3>Total Amount: $' . number_format($sale->total_price) . '</h3>';
+
         return $html;
     }
 
