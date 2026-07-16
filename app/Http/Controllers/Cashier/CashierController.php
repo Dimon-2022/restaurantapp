@@ -124,6 +124,29 @@ class CashierController extends Controller
         return $html;
     }
 
+    public function deleteSaleDetail(Request $request){
+        $saleDetail_id = $request->saleDetail_id;
+        $saleDetail = SaleDetail::find($saleDetail_id);
+        $sale_id = $saleDetail->sale_id;
+        $menu_price = ($saleDetail->menu_price * $saleDetail->quantity);
+        $saleDetail->delete();
+
+        $sale = Sale::find($sale_id);
+        $sale->total_price = $sale->total_price - $menu_price;
+        $sale->save();
+
+        $saleDetails = SaleDetail::where('sale_id', $sale_id)->first();
+
+        if($saleDetails){
+            $html = $this->getSaleDetails($sale_id);
+        }else{
+            $html = 'No sale found';
+        }
+
+        return $html;
+
+    }
+
     private function getSaleDetails($sale_id){
         $html = '<p>Sale ID: ' . $sale->id . '</p>';
         $saleDetails = SaleDetail::where('sale_id', $sale_id)->get();
@@ -173,7 +196,7 @@ $html .= '</tr>
         $html .= '<h3>Total Amount: $' . number_format($sale->total_price) . '</h3>';
 
         if($showBtnPayment){
-            $html .= '<button data-id="' . $sale->id . '" class="btn btn-success btn-block btn-payment">Payment</button>';
+            $html .= '<button data-id="' . $sale->id . '" data-totalAmount="' . $sale->total_price . '" class="btn btn-success btn-block btn-payment" data-toggle="modal" data-target="#exampleModal">Payment</button>';
         } else{
             $html .= '<button data-id="' . $sale->id . '" class="btn btn-warning btn-block btn-confirm-order">Confirm Order</button>';
         }
