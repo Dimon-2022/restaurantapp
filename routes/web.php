@@ -44,6 +44,10 @@ Route::post('/cashier/deleteSaleDetail', [CashierController::class, 'deleteSaleD
 
 Route::post('/cashier/confirmOrderStatus', [CashierController::class, 'confirmOrderStatus'])->name('cashier.confirmOrderStatus');
 
+Route::post('/cashier/savePayment', [CashierController::class, 'savePayment'])->name('cashier.savePayment');
+
+Route::get('/cashier/showReceipt/{sale_id}', [CashierController::class, 'showReceipt'])->name('cashier.showReceipt');
+
 Route::get('/cashier/getMenuByCategory/{category_id}', [CashierController::class, 'getMenuByCategory'])->name('cashier.getMenuByCategory');
 
 

@@ -206,5 +206,29 @@ $html .= '</tr>
         return $html;
     }
 
+    public function savePayment(Request $request){
+        $saleID = $request->saleID;
+        $recievedAmount = $request->recievedAmount;
+        $paymentType = $request->paymentType;
+
+        $sale = Sale::find($saleID);
+        $sale->total_recieved = $recievedAmount;
+        $sale->change = $recievedAmount - $sale->total_price;
+        $sale->payment_type = $paymentType;
+        $sale->sale_status = 'paid';
+        $sale->save();
+
+        $table = Table::find($sale->table_id);
+        $table->status = 'available';
+        $table->save();
+
+        return '/cashier/showReceipt/' . $saleID;
+    }
+
+    public function showReceipt($saleID){
+        $sale = Sale::find($saleID);
+        $saleDetails = SaleDetail::where('sale_id', $saleID)->get();
+        return view('cashier.showReceipt', ['sale' => $sale, 'saleDetails' => $saleDetails]);
+    }
 
 }
