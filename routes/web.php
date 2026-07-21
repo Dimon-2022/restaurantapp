@@ -4,6 +4,7 @@ use App\Http\Controllers\Cashier\CashierController;
 use App\Http\Controllers\Management\CategoryController;
 use App\Http\Controllers\Management\MenuController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Report\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Management\TableController;
 
@@ -50,6 +51,6 @@ Route::get('/cashier/showReceipt/{sale_id}', [CashierController::class, 'showRec
 
 Route::get('/cashier/getMenuByCategory/{category_id}', [CashierController::class, 'getMenuByCategory'])->name('cashier.getMenuByCategory');
 
-
+Route::get('/report', [ReportController::class, 'index'])->name('report.index');
 
 require __DIR__.'/auth.php';
