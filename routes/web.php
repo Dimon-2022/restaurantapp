@@ -53,4 +53,6 @@ Route::get('/cashier/getMenuByCategory/{category_id}', [CashierController::class
 
 Route::get('/report', [ReportController::class, 'index'])->name('report.index');
 
+Route::get('/report/show', [ReportController::class, 'show'])->name('report.show');
+
 require __DIR__.'/auth.php';
